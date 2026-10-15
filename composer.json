@@ -1,0 +1,14 @@
+{
+    "name": "orb/protein-mlm-platform",
+    "description": "Direct Selling Platform Backend with Company-Wide BFS Auto-Spillover 10-Matrix",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.0"
+    }
+}

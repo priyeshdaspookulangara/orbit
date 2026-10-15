@@ -16,7 +16,7 @@ class Database
     {
         self::$dbConfig = $config;
         self::$driver = $config['driver'] ?? 'sqlite';
-        self::$sqlitePath = $config['sqlite_path'] ?? ':memory:';
+        self::$sqlitePath = $config['sqlite_path'] ?? (__DIR__ . '/../../storage/database.sqlite');
         self::$instance = null; // reset instance on config update
     }
 
@@ -37,7 +37,14 @@ class Database
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ]);
             } else {
-                // SQLite
+                // SQLite (Default)
+                if (self::$sqlitePath !== ':memory:') {
+                    $dir = dirname(self::$sqlitePath);
+                    if (!is_dir($dir)) {
+                        mkdir($dir, 0755, true);
+                    }
+                }
+
                 $dsn = "sqlite:" . self::$sqlitePath;
                 self::$instance = new PDO($dsn, null, null, [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

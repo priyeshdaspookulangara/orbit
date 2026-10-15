@@ -67,6 +67,30 @@ class ApiController
                     }
                     return $this->dashboard($data['user_id'] ?? null, $data['member_id'] ?? null);
 
+                case '/api/user/profile':
+                    if ($method !== 'GET') {
+                        return $this->response(false, "Method Not Allowed", null, 405);
+                    }
+                    return $this->userProfile($data['user_id'] ?? null, $data['member_id'] ?? null);
+
+                case '/api/user/referrals':
+                    if ($method !== 'GET') {
+                        return $this->response(false, "Method Not Allowed", null, 405);
+                    }
+                    return $this->userReferrals($data['user_id'] ?? null, $data['member_id'] ?? null);
+
+                case '/api/user/genealogy':
+                    if ($method !== 'GET') {
+                        return $this->response(false, "Method Not Allowed", null, 405);
+                    }
+                    return $this->genealogyTree($data['user_id'] ?? null, $data['member_id'] ?? null);
+
+                case '/api/user/wallet':
+                    if ($method !== 'GET') {
+                        return $this->response(false, "Method Not Allowed", null, 405);
+                    }
+                    return $this->userWallet($data['user_id'] ?? null, $data['member_id'] ?? null);
+
                 case '/api/matrix/tree':
                     if ($method !== 'GET') {
                         return $this->response(false, "Method Not Allowed", null, 405);
@@ -74,6 +98,7 @@ class ApiController
                     return $this->matrixTree($data['user_id'] ?? null, $data['member_id'] ?? null);
 
                 case '/api/admin/stats':
+                case '/api/admin/kpis':
                     if ($method !== 'GET') {
                         return $this->response(false, "Method Not Allowed", null, 405);
                     }
@@ -146,14 +171,100 @@ class ApiController
         return $this->response(true, "Order processed successfully and user placed in 10-matrix.", $result);
     }
 
+    private function resolveUser(?int $userId, ?string $memberId): ?array
+    {
+        if ($userId) {
+            return $this->userService->getUserById($userId);
+        }
+        if ($memberId) {
+            return $this->userService->getUserByMemberId($memberId);
+        }
+        return $this->userService->getUserByMemberId('ORB00001');
+    }
+
+    private function userProfile(?int $userId, ?string $memberId): array
+    {
+        $user = $this->resolveUser($userId, $memberId);
+        if (!$user) {
+            return $this->response(false, "User not found.", null, 404);
+        }
+
+        $matrixNode = $this->matrixService->getNodeByUserId($user['id']);
+        $uplines = $matrixNode ? $this->matrixService->getMatrixUpline($user['id'], 5) : [];
+
+        return $this->response(true, "User profile retrieved.", [
+            'profile' => $user,
+            'matrix_node' => $matrixNode,
+            'uplines' => $uplines,
+            'referral_link' => "/register?ref=" . $user['member_id']
+        ]);
+    }
+
+    private function userReferrals(?int $userId, ?string $memberId): array
+    {
+        $user = $this->resolveUser($userId, $memberId);
+        if (!$user) {
+            return $this->response(false, "User not found.", null, 404);
+        }
+
+        $stmtRef = $this->pdo->prepare("SELECT id, member_id, name, email, is_active, created_at FROM users WHERE referrer_id = :id ORDER BY id DESC");
+        $stmtRef->execute([':id' => $user['id']]);
+        $referrals = $stmtRef->fetchAll() ?: [];
+
+        return $this->response(true, "Direct referrals retrieved.", [
+            'referrer' => [
+                'id' => $user['id'],
+                'member_id' => $user['member_id'],
+                'name' => $user['name']
+            ],
+            'total_referrals' => count($referrals),
+            'referrals' => $referrals
+        ]);
+    }
+
+    private function genealogyTree(?int $userId, ?string $memberId): array
+    {
+        $user = $this->resolveUser($userId, $memberId);
+        if (!$user) {
+            return $this->response(false, "User not found.", null, 404);
+        }
+
+        $tree = $this->matrixService->getGenealogyTree($user['id'], 3);
+
+        return $this->response(true, "Genealogy tree retrieved.", [
+            'user' => [
+                'id' => $user['id'],
+                'member_id' => $user['member_id'],
+                'name' => $user['name']
+            ],
+            'genealogy' => $tree
+        ]);
+    }
+
+    private function userWallet(?int $userId, ?string $memberId): array
+    {
+        $user = $this->resolveUser($userId, $memberId);
+        if (!$user) {
+            return $this->response(false, "User not found.", null, 404);
+        }
+
+        $wallet = $this->commissionService->getWallet($user['id']);
+        $ledgers = $this->commissionService->getLedgerHistory($user['id']);
+
+        return $this->response(true, "Wallet statements retrieved.", [
+            'user' => [
+                'id' => $user['id'],
+                'member_id' => $user['member_id'],
+                'name' => $user['name']
+            ],
+            'wallet' => $wallet,
+            'ledgers' => $ledgers
+        ]);
+    }
+
     private function dashboard(?int $userId, ?string $memberId): array
     {
-        $user = null;
-        if ($userId) {
-            $user = $this->userService->getUserById($userId);
-        } elseif ($memberId) {
-            $user = $this->userService->getUserByMemberId($memberId);
-        }
+        $user = $this->resolveUser($userId, $memberId);
 
         if (!$user) {
             return $this->response(false, "User not found.", null, 404);

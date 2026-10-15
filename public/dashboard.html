@@ -3,124 +3,449 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORB Protein Powder - Direct Selling 10-Matrix Platform</title>
+    <title>ORB Direct Selling 10-Matrix Platform</title>
     <style>
         :root {
-            --primary: #d97706;
-            --primary-dark: #b45309;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --success: #22c55e;
+            --primary: #f59e0b;
+            --primary-dark: #d97706;
+            --bg: #0b0f19;
+            --card-bg: #111827;
+            --card-header: #1f2937;
+            --text: #f9fafb;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --success: #10b981;
+            --accent: #3b82f6;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
-        .container { max-width: 1100px; margin: 0 auto; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-        header h1 { color: var(--primary); font-size: 2.2rem; margin-bottom: 5px; }
-        header p { color: var(--text-muted); }
+        header { background: #111827; border-bottom: 1px solid var(--border); padding: 20px 0; margin-bottom: 25px; }
+        header .header-inner { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { color: var(--primary); font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
-        .card h2 { font-size: 1.25rem; color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .member-bar { background: #1f2937; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        .member-bar input { background: #0b0f19; border: 1px solid var(--border); color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold; width: 110px; }
+
+        /* Navigation Tabs */
+        .nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border); margin-bottom: 25px; overflow-x: auto; }
+        .tab-btn { padding: 12px 20px; background: transparent; color: var(--text-muted); border: none; font-size: 1rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: #1f2937; border-radius: 6px 6px 0 0; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
+        .card-header { background: var(--card-header); padding: 15px 20px; font-weight: bold; font-size: 1.1rem; color: var(--primary); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-body { padding: 20px; }
+
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: center; }
+        .stat-card .val { font-size: 2rem; font-weight: bold; color: var(--success); margin-top: 5px; }
+        .stat-card .lbl { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted); }
-        input, select { width: 100%; padding: 10px; background: #0f172a; border: 1px solid var(--border); border-radius: 4px; color: #fff; font-size: 0.95rem; }
-        button { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        button:hover { background: var(--primary-dark); }
+        label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); }
+        input, select { width: 100%; padding: 10px 14px; background: #0b0f19; border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 0.95rem; }
+        button.btn-primary { width: 100%; padding: 12px; background: var(--primary); color: #000; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button.btn-primary:hover { background: var(--primary-dark); }
 
-        .stat-box { background: #0f172a; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid var(--border); }
-        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--success); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #1f2937; color: var(--text-muted); font-weight: 600; }
 
-        pre { background: #020617; padding: 15px; border-radius: 6px; overflow-x: auto; color: #38bdf8; font-size: 0.85rem; max-height: 300px; }
-        .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; background: #334155; }
-        .tag-active { background: #15803d; color: #fff; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .badge-active { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+        .badge-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid #f59e0b; }
+
+        /* Genealogy Tree Visualizer */
+        .tree-node { background: #1f2937; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .tree-children { padding-left: 25px; border-left: 2px dashed var(--border); margin-left: 15px; }
+
+        pre { background: #000; padding: 15px; border-radius: 6px; color: #38bdf8; font-size: 0.85rem; max-height: 250px; overflow-y: auto; }
     </style>
 </head>
 <body>
+    <header>
+        <div class="container header-inner">
+            <h1>⚡ ORB Protein 10-Matrix Platform</h1>
+            <div class="member-bar">
+                <span>Active Member Context:</span>
+                <input type="text" id="globalMemberId" value="ORB00001">
+                <button onclick="refreshAllSections()" style="padding:4px 10px; background:var(--primary); border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Switch</button>
+            </div>
+        </div>
+    </header>
+
     <div class="container">
-        <header>
-            <h1>⚡ ORB Protein Powder Platform</h1>
-            <p>10-Matrix Structure with Company-Wide BFS Auto-Spillover & Direct Selling Engine</p>
-        </header>
+        <!-- Main Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('kpisTab', this)">📊 System KPIs</button>
+            <button class="tab-btn" onclick="switchTab('profileTab', this)">👤 My Profile</button>
+            <button class="tab-btn" onclick="switchTab('storeTab', this)">🛒 Customer Store & Join</button>
+            <button class="tab-btn" onclick="switchTab('referralsTab', this)">🤝 My Direct Referrals</button>
+            <button class="tab-btn" onclick="switchTab('genealogyTab', this)">🌳 Genealogy Downline</button>
+            <button class="tab-btn" onclick="switchTab('walletTab', this)">💳 My Wallet & Ledgers</button>
+        </div>
 
-        <div class="grid">
-            <!-- Registration & Checkout Panel -->
-            <div class="card">
-                <h2>1. Register New Distributor</h2>
-                <form id="regForm">
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="regName" placeholder="John Doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="regEmail" placeholder="john@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="regPass" value="Secret123!" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Sponsor / Referral Member Code</label>
-                        <input type="text" id="regRef" placeholder="e.g. ORB00001" value="ORB00001">
-                    </div>
-                    <button type="submit">Create Member Account</button>
-                </form>
+        <!-- 1. Platform KPIs Section -->
+        <div id="kpisTab" class="tab-content active">
+            <div class="grid-4">
+                <div class="stat-card">
+                    <div class="lbl">Total Members</div>
+                    <div class="val" id="kpiTotalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="lbl">Active Distributors</div>
+                    <div class="val" id="kpiActiveUsers" style="color:#10b981;">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="lbl">Total Gross Sales</div>
+                    <div class="val" id="kpiGrossSales">₹0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="lbl">Total Orders Placed</div>
+                    <div class="val" id="kpiTotalOrders">0</div>
+                </div>
             </div>
 
-            <!-- Package Purchase / Activation -->
-            <div class="card">
-                <h2>2. Package Purchase (₹6,000)</h2>
-                <form id="buyForm">
-                    <div class="form-group">
-                        <label>Member ID / User ID</label>
-                        <input type="number" id="buyUserId" placeholder="Enter User ID (e.g. 2)" required>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">Company 10-Matrix Breakdown by Level</div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Matrix Level</th>
+                                    <th>Max Capacity</th>
+                                    <th>Filled Nodes</th>
+                                    <th>Occupancy %</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrixLevelTable">
+                                <tr><td colspan="4">Loading matrix statistics...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="form-group">
-                        <label>Protein Powder Flavor</label>
-                        <select id="buyFlavor">
-                            <option value="Double Rich Chocolate">Double Rich Chocolate (2kg)</option>
-                            <option value="Vanilla Ice Cream">Vanilla Ice Cream (2kg)</option>
-                            <option value="Strawberry Milkshake">Strawberry Milkshake (2kg)</option>
-                            <option value="Unflavored Raw Whey">Unflavored Raw Whey (2kg)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Shipping Delivery Address</label>
-                        <input type="text" id="buyAddress" placeholder="123 Tech Park, Suite 400, NY" value="742 Evergreen Terrace" required>
-                    </div>
-                    <button type="submit" style="background:#16a34a;">Pay ₹6,000 & Join Matrix</button>
-                </form>
-            </div>
+                </div>
 
-            <!-- Member Dashboard Query -->
-            <div class="card">
-                <h2>3. View Member Dashboard</h2>
-                <form id="dashForm">
-                    <div class="form-group">
-                        <label>Member Code / Member ID</label>
-                        <input type="text" id="dashMemberId" placeholder="e.g. ORB00001" value="ORB00001">
+                <div class="card">
+                    <div class="card-header">Company Commission Payout Summary</div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Commission Type</th>
+                                    <th>Total Distributed</th>
+                                </tr>
+                            </thead>
+                            <tbody id="commissionStatsTable">
+                                <tr><td colspan="2">Loading commission payouts...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <button type="submit" style="background:#2563eb;">Fetch Wallet & Tree Position</button>
-                </form>
+                </div>
             </div>
         </div>
 
-        <!-- System Output & Response Log -->
-        <div class="card" style="margin-bottom:30px;">
-            <h2>API Output & Real-time Matrix Event Feed</h2>
-            <pre id="apiOutput">// Output will appear here after actions above...</pre>
+        <!-- 2. Profile Section -->
+        <div id="profileTab" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">Member Account Information</div>
+                    <div class="card-body">
+                        <p style="margin-bottom:10px;"><strong>Member Code:</strong> <span id="profMemberId" class="badge badge-active">-</span></p>
+                        <p style="margin-bottom:10px;"><strong>Full Name:</strong> <span id="profName">-</span></p>
+                        <p style="margin-bottom:10px;"><strong>Email:</strong> <span id="profEmail">-</span></p>
+                        <p style="margin-bottom:10px;"><strong>Status:</strong> <span id="profStatus">-</span></p>
+                        <p style="margin-bottom:10px;"><strong>Direct Sponsor:</strong> <span id="profSponsor">-</span></p>
+                        <div style="margin-top:20px; background:#1f2937; padding:15px; border-radius:6px; border:1px solid var(--border);">
+                            <label>Your Direct Shareable Referral Link:</label>
+                            <input type="text" id="profRefLink" readonly style="margin-top:5px; color:#f59e0b; font-weight:bold;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">5-Level Matrix Upline Genealogy Chain</div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Upline Level</th>
+                                    <th>Member Code</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="uplineTable">
+                                <tr><td colspan="4">Loading upline structure...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Customer Store Section -->
+        <div id="storeTab" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">New Distributor Registration</div>
+                    <div class="card-body">
+                        <form id="regForm">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="regName" placeholder="e.g. Alex Smith" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="regEmail" placeholder="alex@domain.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="regPass" value="SecurePass123!" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Referrer / Sponsor Code</label>
+                                <input type="text" id="regRef" placeholder="ORB00001" value="ORB00001">
+                            </div>
+                            <button type="submit" class="btn-primary">Register Member</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Protein Powder Package Order (₹6,000)</div>
+                    <div class="card-body">
+                        <form id="buyForm">
+                            <div class="form-group">
+                                <label>Target User ID for Package Activation</label>
+                                <input type="number" id="buyUserId" placeholder="Enter User ID (e.g., 2)" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Protein Powder Flavor Selection</label>
+                                <select id="buyFlavor">
+                                    <option value="Double Rich Chocolate">Double Rich Chocolate (2kg Tub)</option>
+                                    <option value="Vanilla Ice Cream">Vanilla Ice Cream (2kg Tub)</option>
+                                    <option value="Strawberry Milkshake">Strawberry Milkshake (2kg Tub)</option>
+                                    <option value="Unflavored Whey Isolate">Unflavored Whey Isolate (2kg Tub)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Delivery Shipping Address</label>
+                                <input type="text" id="buyAddress" placeholder="Full Delivery Address" value="100 Tech Park, Suite 500" required>
+                            </div>
+                            <button type="submit" class="btn-primary" style="background:#10b981;">Pay ₹6,000 & Activate in 10-Matrix</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Direct Referrals Section -->
+        <div id="referralsTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">Direct Personally Sponsored Members</div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Member Code</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Registration Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="directReferralsTable">
+                            <tr><td colspan="6">Loading direct referrals...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Genealogy Downline Section -->
+        <div id="genealogyTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">10-Matrix Downline Tree Visualization</div>
+                <div class="card-body">
+                    <div id="genealogyContainer">Loading tree hierarchy...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Wallet & Ledgers Section -->
+        <div id="walletTab" class="tab-content">
+            <div class="stat-card" style="margin-bottom:20px; max-width:400px;">
+                <div class="lbl">Wallet Balance</div>
+                <div class="val" id="walletBalance">₹0.00</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Financial Ledger Transactions & Bonus History</div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Balance After</th>
+                                <th>Description</th>
+                                <th>Reference</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="walletLedgerTable">
+                            <tr><td colspan="7">Loading wallet transactions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Event Output Log -->
+        <div class="card" style="margin-top:20px;">
+            <div class="card-header">Live Server Raw JSON Response</div>
+            <div class="card-body">
+                <pre id="apiConsole">// System ready.</pre>
+            </div>
         </div>
     </div>
 
     <script>
-        const output = document.getElementById('apiOutput');
+        function logJson(data) {
+            document.getElementById('apiConsole').textContent = JSON.stringify(data, null, 2);
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+            refreshAllSections();
+        }
+
+        async function refreshAllSections() {
+            const memberId = document.getElementById('globalMemberId').value.trim() || 'ORB00001';
+
+            // 1. Fetch KPIs
+            try {
+                const res = await fetch('/api/admin/kpis');
+                const kpis = await res.json();
+                if (kpis.success) {
+                    document.getElementById('kpiTotalUsers').textContent = kpis.data.users.total_users || 0;
+                    document.getElementById('kpiActiveUsers').textContent = kpis.data.users.active_users || 0;
+                    document.getElementById('kpiGrossSales').textContent = '₹' + (kpis.data.orders.total_revenue || 0).toLocaleString();
+                    document.getElementById('kpiTotalOrders').textContent = kpis.data.orders.total_orders || 0;
+
+                    // Matrix level table
+                    const matrixCapacities = [1, 10, 100, 1000, 10000];
+                    let mRows = '';
+                    kpis.data.matrix_by_level.forEach(lvl => {
+                        const cap = matrixCapacities[lvl.level - 1] || 1;
+                        const pct = ((lvl.total_nodes / cap) * 100).toFixed(1) + '%';
+                        mRows += `<tr><td>Level ${lvl.level}</td><td>${cap.toLocaleString()}</td><td>${lvl.total_nodes}</td><td>${pct}</td></tr>`;
+                    });
+                    document.getElementById('matrixLevelTable').innerHTML = mRows || '<tr><td colspan="4">No matrix nodes found.</td></tr>';
+
+                    // Commission stats table
+                    let cRows = '';
+                    kpis.data.commissions.forEach(c => {
+                        cRows += `<tr><td>${c.type}</td><td>₹${parseFloat(c.total_amount).toLocaleString()}</td></tr>`;
+                    });
+                    document.getElementById('commissionStatsTable').innerHTML = cRows || '<tr><td colspan="2">No commissions paid out yet.</td></tr>';
+                }
+            } catch (e) { console.error(e); }
+
+            // 2. Fetch Profile
+            try {
+                const res = await fetch(`/api/user/profile?member_id=${encodeURIComponent(memberId)}`);
+                const prof = await res.json();
+                if (prof.success) {
+                    const u = prof.data.profile;
+                    document.getElementById('profMemberId').textContent = u.member_id;
+                    document.getElementById('profName').textContent = u.name;
+                    document.getElementById('profEmail').textContent = u.email;
+                    document.getElementById('profStatus').innerHTML = u.is_active ? '<span class="badge badge-active">ACTIVE DISTRIBUTOR</span>' : '<span class="badge badge-pending">REGISTERED (INACTIVE)</span>';
+                    document.getElementById('profSponsor').textContent = u.referrer_member_id ? `${u.referrer_name} (${u.referrer_member_id})` : 'Root Sponsor';
+                    document.getElementById('profRefLink').value = window.location.origin + prof.data.referral_link;
+
+                    // Uplines
+                    let uRows = '';
+                    let level = 1;
+                    prof.data.uplines.forEach(up => {
+                        uRows += `<tr><td>Level ${level++} Above</td><td>${up.member_id}</td><td>${up.name}</td><td><span class="badge badge-active">ACTIVE</span></td></tr>`;
+                    });
+                    document.getElementById('uplineTable').innerHTML = uRows || '<tr><td colspan="4">No upline nodes (Top Root Member).</td></tr>';
+                }
+            } catch (e) { console.error(e); }
+
+            // 3. Direct Referrals
+            try {
+                const res = await fetch(`/api/user/referrals?member_id=${encodeURIComponent(memberId)}`);
+                const refs = await res.json();
+                if (refs.success) {
+                    let rRows = '';
+                    let idx = 1;
+                    refs.data.referrals.forEach(r => {
+                        const st = r.is_active ? '<span class="badge badge-active">ACTIVE</span>' : '<span class="badge badge-pending">PENDING ACTIVATION</span>';
+                        rRows += `<tr><td>${idx++}</td><td>${r.member_id}</td><td>${r.name}</td><td>${r.email}</td><td>${st}</td><td>${r.created_at}</td></tr>`;
+                    });
+                    document.getElementById('directReferralsTable').innerHTML = rRows || '<tr><td colspan="6">No direct referrals sponsored yet.</td></tr>';
+                }
+            } catch (e) { console.error(e); }
+
+            // 4. Genealogy
+            try {
+                const res = await fetch(`/api/user/genealogy?member_id=${encodeURIComponent(memberId)}`);
+                const gen = await res.json();
+                if (gen.success && gen.data.genealogy) {
+                    document.getElementById('genealogyContainer').innerHTML = renderGenealogyHtml(gen.data.genealogy);
+                } else {
+                    document.getElementById('genealogyContainer').innerHTML = '<p>Member not yet active in matrix tree.</p>';
+                }
+            } catch (e) { console.error(e); }
+
+            // 5. Wallet
+            try {
+                const res = await fetch(`/api/user/wallet?member_id=${encodeURIComponent(memberId)}`);
+                const wal = await res.json();
+                if (wal.success) {
+                    document.getElementById('walletBalance').textContent = '₹' + parseFloat(wal.data.wallet.balance || 0).toLocaleString('en-IN', {minimumFractionDigits: 2});
+                    let lRows = '';
+                    wal.data.ledgers.forEach(l => {
+                        lRows += `<tr><td>${l.id}</td><td><strong>${l.type}</strong></td><td style="color:#10b981;">+₹${parseFloat(l.amount).toFixed(2)}</td><td>₹${parseFloat(l.balance_after).toFixed(2)}</td><td>${l.description}</td><td>${l.reference_id || '-'}</td><td>${l.created_at}</td></tr>`;
+                    });
+                    document.getElementById('walletLedgerTable').innerHTML = lRows || '<tr><td colspan="7">No financial ledger entries.</td></tr>';
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function renderGenealogyHtml(node) {
+            let html = `<div class="tree-node">
+                <strong>Member: ${node.member_id} - ${node.name}</strong>
+                <span style="color:#9ca3af;">(Position Index: ${node.position_index}, Level: ${node.level})</span>
+                <span class="badge badge-active" style="margin-left:10px;">${node.children_count || 0} / 10 Children</span>
+            </div>`;
+
+            if (node.children_nodes && node.children_nodes.length > 0) {
+                html += '<div class="tree-children">';
+                node.children_nodes.forEach(child => {
+                    html += renderGenealogyHtml(child);
+                });
+                html += '</div>';
+            }
+            return html;
+        }
 
         document.getElementById('regForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -135,10 +460,14 @@
                 })
             });
             const data = await res.json();
-            output.textContent = JSON.stringify(data, null, 2);
+            logJson(data);
             if (data.success && data.data.user) {
                 document.getElementById('buyUserId').value = data.data.user.id;
+                alert(`Registration Successful! Assigned Member Code: ${data.data.user.member_id}. User ID: ${data.data.user.id}`);
+            } else {
+                alert('Error: ' + data.message);
             }
+            refreshAllSections();
         });
 
         document.getElementById('buyForm').addEventListener('submit', async (e) => {
@@ -153,16 +482,17 @@
                 })
             });
             const data = await res.json();
-            output.textContent = JSON.stringify(data, null, 2);
+            logJson(data);
+            if (data.success) {
+                alert(`Order Processed! Member active in 10-Matrix. Direct & Level commissions distributed!`);
+            } else {
+                alert('Checkout Error: ' + data.message);
+            }
+            refreshAllSections();
         });
 
-        document.getElementById('dashForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const memberId = document.getElementById('dashMemberId').value;
-            const res = await fetch(`/api/user/dashboard?member_id=${encodeURIComponent(memberId)}`);
-            const data = await res.json();
-            output.textContent = JSON.stringify(data, null, 2);
-        });
+        // Initial Load
+        refreshAllSections();
     </script>
 </body>
 </html>

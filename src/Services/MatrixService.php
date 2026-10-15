@@ -216,7 +216,7 @@ class MatrixService
     public function getDirectChildren(int $nodeId): array
     {
         $stmt = $this->pdo->prepare("
-            SELECT m.*, u.member_id, u.name, u.email
+            SELECT m.*, u.member_id, u.name, u.email, u.is_active
             FROM matrix_nodes m
             JOIN users u ON m.user_id = u.id
             WHERE m.parent_id = :parent_id
@@ -224,6 +224,36 @@ class MatrixService
         ");
         $stmt->execute([':parent_id' => $nodeId]);
         return $stmt->fetchAll() ?: [];
+    }
+
+    /**
+     * Fetch full multi-level genealogy downline tree starting from a given user's matrix node
+     */
+    public function getGenealogyTree(int $userId, int $maxDepth = 3): array
+    {
+        $node = $this->getNodeByUserId($userId);
+        if (!$node) {
+            return [];
+        }
+
+        return $this->buildGenealogyBranch($node, $maxDepth, 1);
+    }
+
+    private function buildGenealogyBranch(array $currentNode, int $maxDepth, int $currentRelativeLevel): array
+    {
+        $currentNode['relative_level'] = $currentRelativeLevel;
+        $children = $this->getDirectChildren((int) $currentNode['id']);
+
+        $currentNode['children_nodes'] = [];
+        if ($currentRelativeLevel < $maxDepth && !empty($children)) {
+            foreach ($children as $child) {
+                $currentNode['children_nodes'][] = $this->buildGenealogyBranch($child, $maxDepth, $currentRelativeLevel + 1);
+            }
+        } else {
+            $currentNode['children_nodes'] = $children;
+        }
+
+        return $currentNode;
     }
 
     /**

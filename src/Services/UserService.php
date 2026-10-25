@@ -166,6 +166,39 @@ class UserService
     }
 
     /**
+     * Reset user password by email
+     */
+    public function resetPassword(string $email, string $newPassword): array
+    {
+        $cleanEmail = trim($email);
+        $cleanPassword = trim($newPassword);
+
+        if (empty($cleanEmail) || empty($cleanPassword)) {
+            throw new RuntimeException("Email and new password are required for password reset.");
+        }
+
+        $stmt = $this->pdo->prepare("SELECT id FROM users WHERE email = :email");
+        $stmt->execute([':email' => $cleanEmail]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            throw new RuntimeException("No account found with email address: {$cleanEmail}");
+        }
+
+        $userId = (int) $user['id'];
+        $passwordHash = password_hash($cleanPassword, PASSWORD_BCRYPT);
+
+        $stmtUpdate = $this->pdo->prepare("UPDATE users SET password_hash = :hash WHERE id = :id");
+        $stmtUpdate->execute([':hash' => $passwordHash, ':id' => $userId]);
+
+        $this->logger->log('PASSWORD_RESET', $userId, [
+            'email' => $cleanEmail
+        ]);
+
+        return $this->getUserById($userId);
+    }
+
+    /**
      * Update user details (name, email, optional password)
      */
     public function updateUser(int $userId, array $data): array

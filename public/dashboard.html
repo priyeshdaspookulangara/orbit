@@ -324,6 +324,21 @@
 
                         <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
 
+                        <h3 style="color:var(--primary); font-size:1rem; margin-bottom:15px;">Reset Account Password</h3>
+                        <form id="resetPasswordForm" style="margin-bottom:20px;">
+                            <div class="form-group">
+                                <label>Registered Account Email</label>
+                                <input type="email" id="resetEmail" placeholder="your@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="resetNewPassword" placeholder="Enter new password" required>
+                            </div>
+                            <button type="submit" class="btn-primary" style="background:#eab308; color:#000;">Reset Password</button>
+                        </form>
+
+                        <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+
                         <h3 style="color:var(--primary); font-size:1rem; margin-bottom:15px;">Edit Profile Information</h3>
                         <form id="editProfileForm">
                             <div class="form-group">
@@ -701,6 +716,27 @@
                 document.getElementById('editPassword').value = '';
             } else {
                 alert('Update Error: ' + data.message);
+            }
+            refreshAllSections();
+        });
+
+        document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const res = await fetch('/api/password/reset', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: document.getElementById('resetEmail').value,
+                    new_password: document.getElementById('resetNewPassword').value
+                })
+            });
+            const data = await res.json();
+            logJson(data);
+            if (data.success) {
+                alert('Password reset successfully!');
+                document.getElementById('resetNewPassword').value = '';
+            } else {
+                alert('Reset Error: ' + data.message);
             }
             refreshAllSections();
         });

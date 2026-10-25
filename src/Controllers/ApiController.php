@@ -79,6 +79,12 @@ class ApiController
                     }
                     return $this->userUpdate($data);
 
+                case '/api/password/reset':
+                    if ($method !== 'POST') {
+                        return $this->response(false, "Method Not Allowed", null, 405);
+                    }
+                    return $this->passwordReset($data);
+
                 case '/api/user/referrals':
                     if ($method !== 'GET') {
                         return $this->response(false, "Method Not Allowed", null, 405);
@@ -157,6 +163,22 @@ class ApiController
 
         return $this->response(true, "Member profile updated successfully.", [
             'user' => $updatedUser
+        ]);
+    }
+
+    private function passwordReset(array $data): array
+    {
+        $email = trim($data['email'] ?? '');
+        $newPassword = trim($data['new_password'] ?? $data['password'] ?? '');
+
+        if (empty($email) || empty($newPassword)) {
+            return $this->response(false, "Email and new password are required.", null, 422);
+        }
+
+        $user = $this->userService->resetPassword($email, $newPassword);
+
+        return $this->response(true, "Password reset successfully.", [
+            'user' => $user
         ]);
     }
 

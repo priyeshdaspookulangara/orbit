@@ -135,6 +135,17 @@ class MatrixPlatformTest
         $this->assertEquals('root_new@orbprotein.com', $updated['email']);
     }
 
+    public function testPasswordResetFeature(): void
+    {
+        $root = $this->userService->ensureRootUserExists();
+
+        $updated = $this->userService->resetPassword('root@orbprotein.com', 'BrandNewResetPass123!');
+        $this->assertNotNull($updated);
+
+        $auth = $this->userService->authenticate('root@orbprotein.com', 'BrandNewResetPass123!');
+        $this->assertNotNull($auth);
+    }
+
     public function testFull5LevelMatrixCapacityLimits(): void
     {
         $root = $this->userService->ensureRootUserExists();

@@ -165,6 +165,59 @@ class UserService
         return null;
     }
 
+    /**
+     * Update user details (name, email, optional password)
+     */
+    public function updateUser(int $userId, array $data): array
+    {
+        $user = $this->getUserById($userId);
+        if (!$user) {
+            throw new RuntimeException("User with ID {$userId} not found.");
+        }
+
+        $newName = trim($data['name'] ?? $user['name']);
+        $newEmail = trim($data['email'] ?? $user['email']);
+
+        if (empty($newName) || empty($newEmail)) {
+            throw new RuntimeException("Name and Email cannot be empty.");
+        }
+
+        // Check email uniqueness if email changed
+        if ($newEmail !== $user['email']) {
+            $stmt = $this->pdo->prepare("SELECT id FROM users WHERE email = :email AND id != :id");
+            $stmt->execute([':email' => $newEmail, ':id' => $userId]);
+            if ($stmt->fetch()) {
+                throw new RuntimeException("Email address {$newEmail} is already in use by another account.");
+            }
+        }
+
+        $params = [
+            ':id' => $userId,
+            ':name' => $newName,
+            ':email' => $newEmail,
+        ];
+
+        $sql = "UPDATE users SET name = :name, email = :email";
+
+        if (!empty($data['password'])) {
+            $sql .= ", password_hash = :password_hash";
+            $params[':password_hash'] = password_hash(trim($data['password']), PASSWORD_BCRYPT);
+        }
+
+        $sql .= " WHERE id = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        $this->logger->log('USER_PROFILE_UPDATED', $userId, [
+            'name' => $newName,
+            'email' => $newEmail,
+            'password_changed' => !empty($data['password'])
+        ]);
+
+        return $this->getUserById($userId);
+    }
+
     private function generateNextMemberId(): string
     {
         // Find max ID

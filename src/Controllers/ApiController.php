@@ -73,6 +73,12 @@ class ApiController
                     }
                     return $this->userProfile($data['user_id'] ?? null, $data['member_id'] ?? null);
 
+                case '/api/user/update':
+                    if ($method !== 'POST') {
+                        return $this->response(false, "Method Not Allowed", null, 405);
+                    }
+                    return $this->userUpdate($data);
+
                 case '/api/user/referrals':
                     if ($method !== 'GET') {
                         return $this->response(false, "Method Not Allowed", null, 405);
@@ -128,6 +134,29 @@ class ApiController
         return $this->response(true, "Registration successful.", [
             'user' => $user,
             'referral_link' => "/register?ref=" . $user['member_id']
+        ]);
+    }
+
+    private function userUpdate(array $data): array
+    {
+        $userId = (int) ($data['user_id'] ?? 0);
+        $memberId = trim($data['member_id'] ?? '');
+
+        $user = null;
+        if ($userId > 0) {
+            $user = $this->userService->getUserById($userId);
+        } elseif (!empty($memberId)) {
+            $user = $this->userService->getUserByMemberId($memberId);
+        }
+
+        if (!$user) {
+            return $this->response(false, "User not found.", null, 404);
+        }
+
+        $updatedUser = $this->userService->updateUser($user['id'], $data);
+
+        return $this->response(true, "Member profile updated successfully.", [
+            'user' => $updatedUser
         ]);
     }
 

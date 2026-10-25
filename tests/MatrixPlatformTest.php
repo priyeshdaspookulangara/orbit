@@ -122,6 +122,19 @@ class MatrixPlatformTest
         $this->assertEquals('DISPATCH_PENDING', $fulfillment['status']);
     }
 
+    public function testMemberUpdateFeature(): void
+    {
+        $root = $this->userService->ensureRootUserExists();
+
+        $updated = $this->userService->updateUser($root['id'], [
+            'name' => 'Root Admin Renamed',
+            'email' => 'root_new@orbprotein.com'
+        ]);
+
+        $this->assertEquals('Root Admin Renamed', $updated['name']);
+        $this->assertEquals('root_new@orbprotein.com', $updated['email']);
+    }
+
     public function testFull5LevelMatrixCapacityLimits(): void
     {
         $root = $this->userService->ensureRootUserExists();

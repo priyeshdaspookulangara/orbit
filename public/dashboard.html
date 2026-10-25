@@ -321,6 +321,25 @@
                             <label>Your Direct Shareable Referral Link:</label>
                             <input type="text" id="profRefLink" readonly style="margin-top:5px; color:#f59e0b; font-weight:bold;">
                         </div>
+
+                        <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+
+                        <h3 style="color:var(--primary); font-size:1rem; margin-bottom:15px;">Edit Profile Information</h3>
+                        <form id="editProfileForm">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="editName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="editEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password (leave empty to keep current password)</label>
+                                <input type="password" id="editPassword" placeholder="Enter new password">
+                            </div>
+                            <button type="submit" class="btn-primary">Update Profile</button>
+                        </form>
                     </div>
                 </div>
 
@@ -544,6 +563,8 @@
                     document.getElementById('profMemberId').textContent = u.member_id;
                     document.getElementById('profName').textContent = u.name;
                     document.getElementById('profEmail').textContent = u.email;
+                    document.getElementById('editName').value = u.name;
+                    document.getElementById('editEmail').value = u.email;
                     document.getElementById('profStatus').innerHTML = u.is_active ? '<span class="badge badge-active">ACTIVE DISTRIBUTOR</span>' : '<span class="badge badge-pending">REGISTERED (INACTIVE)</span>';
                     document.getElementById('profSponsor').textContent = u.referrer_member_id ? `${u.referrer_name} (${u.referrer_member_id})` : 'Root Sponsor';
                     document.getElementById('profRefLink').value = window.location.origin + prof.data.referral_link;
@@ -656,6 +677,30 @@
                 alert(`Order Processed! Member active in 10-Matrix. Direct & Level commissions distributed!`);
             } else {
                 alert('Checkout Error: ' + data.message);
+            }
+            refreshAllSections();
+        });
+
+        document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const memberId = document.getElementById('globalMemberId').value.trim() || 'ORB00001';
+            const res = await fetch('/api/user/update', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    member_id: memberId,
+                    name: document.getElementById('editName').value,
+                    email: document.getElementById('editEmail').value,
+                    password: document.getElementById('editPassword').value
+                })
+            });
+            const data = await res.json();
+            logJson(data);
+            if (data.success) {
+                alert('Profile updated successfully!');
+                document.getElementById('editPassword').value = '';
+            } else {
+                alert('Update Error: ' + data.message);
             }
             refreshAllSections();
         });

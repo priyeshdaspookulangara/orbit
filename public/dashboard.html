@@ -8,32 +8,155 @@
         :root {
             --primary: #f59e0b;
             --primary-dark: #d97706;
-            --bg: #0b0f19;
-            --card-bg: #111827;
-            --card-header: #1f2937;
+            --bg: #090d16;
+            --sidebar-bg: #111827;
+            --card-bg: #151d2a;
+            --card-header: #1e293b;
             --text: #f9fafb;
             --text-muted: #9ca3af;
-            --border: #374151;
+            --border: #2e3a4e;
             --success: #10b981;
             --accent: #3b82f6;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
 
-        header { background: #111827; border-bottom: 1px solid var(--border); padding: 20px 0; margin-bottom: 25px; }
-        header .header-inner { display: flex; justify-content: space-between; align-items: center; }
-        header h1 { color: var(--primary); font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
+        /* Sidebar (Aside) Layout */
+        aside.sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
 
-        .member-bar { background: #1f2937; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
-        .member-bar input { background: #0b0f19; border: 1px solid var(--border); color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold; width: 110px; }
+        .sidebar-brand {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
 
-        /* Navigation Tabs */
-        .nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border); margin-bottom: 25px; overflow-x: auto; }
-        .tab-btn { padding: 12px 20px; background: transparent; color: var(--text-muted); border: none; font-size: 1rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
-        .tab-btn:hover { color: var(--text); }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: #1f2937; border-radius: 6px 6px 0 0; }
+        .sidebar-brand h1 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .context-switcher {
+            padding: 15px 20px;
+            background: #1e293b;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .context-switcher label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .context-switcher-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .context-switcher-row input {
+            width: 100%;
+            background: #0b0f19;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .context-switcher-row button {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-section-title {
+            padding: 10px 20px 5px 20px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background: #1e293b;
+            border-left-color: var(--primary);
+        }
+
+        /* Main Content Container */
+        main.main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 30px;
+            max-width: calc(100% - 280px);
+        }
+
+        .content-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-header h2 {
+            font-size: 1.6rem;
+            color: var(--text);
+        }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -42,7 +165,7 @@
         .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
 
         .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
-        .card-header { background: var(--card-header); padding: 15px 20px; font-weight: bold; font-size: 1.1rem; color: var(--primary); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-header { background: var(--card-header); padding: 15px 20px; font-weight: bold; font-size: 1.05rem; color: var(--primary); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .card-body { padding: 20px; }
 
         .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: center; }
@@ -57,47 +180,73 @@
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background: #1f2937; color: var(--text-muted); font-weight: 600; }
+        th { background: #1e293b; color: var(--text-muted); font-weight: 600; }
 
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
         .badge-active { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
         .badge-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid #f59e0b; }
 
         /* Genealogy Tree Visualizer */
-        .tree-node { background: #1f2937; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .tree-node { background: #1e293b; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
         .tree-children { padding-left: 25px; border-left: 2px dashed var(--border); margin-left: 15px; }
 
         pre { background: #000; padding: 15px; border-radius: 6px; color: #38bdf8; font-size: 0.85rem; max-height: 250px; overflow-y: auto; }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container header-inner">
-            <h1>⚡ ORB Protein 10-Matrix Platform</h1>
-            <div class="member-bar">
-                <span>Active Member Context:</span>
+    <!-- Aside Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h1>⚡ ORB Matrix</h1>
+            <p>10-Matrix Protein Powder Direct Selling</p>
+        </div>
+
+        <div class="context-switcher">
+            <label>Member ID Context</label>
+            <div class="context-switcher-row">
                 <input type="text" id="globalMemberId" value="ORB00001">
-                <button onclick="refreshAllSections()" style="padding:4px 10px; background:var(--primary); border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Switch</button>
+                <button onclick="refreshAllSections()">Switch</button>
             </div>
         </div>
-    </header>
 
-    <div class="container">
-        <!-- Main Navigation Tabs -->
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('kpisTab', this)">📊 System KPIs</button>
-            <button class="tab-btn" onclick="switchTab('profileTab', this)">👤 My Profile</button>
-            <button class="tab-btn" onclick="switchTab('storeTab', this)">🛒 Customer Store & Join</button>
-            <button class="tab-btn" onclick="switchTab('referralsTab', this)">🤝 My Direct Referrals</button>
-            <button class="tab-btn" onclick="switchTab('genealogyTab', this)">🌳 Genealogy Downline</button>
-            <button class="tab-btn" onclick="switchTab('walletTab', this)">💳 My Wallet & Ledgers</button>
-        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-title">Admin Dashboard</div>
+            <a class="nav-link active" onclick="switchTab('kpisTab', this)">
+                <span>📊</span> System KPIs
+            </a>
 
+            <div class="nav-section-title">User Account</div>
+            <a class="nav-link" onclick="switchTab('profileTab', this)">
+                <span>👤</span> My Profile
+            </a>
+            <a class="nav-link" onclick="switchTab('referralsTab', this)">
+                <span>🤝</span> Direct Referrals
+            </a>
+            <a class="nav-link" onclick="switchTab('genealogyTab', this)">
+                <span>🌳</span> Genealogy Downline
+            </a>
+            <a class="nav-link" onclick="switchTab('walletTab', this)">
+                <span>💳</span> Wallet & Statements
+            </a>
+
+            <div class="nav-section-title">E-Commerce</div>
+            <a class="nav-link" onclick="switchTab('storeTab', this)">
+                <span>🛒</span> Store & Package Join
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
         <!-- 1. Platform KPIs Section -->
         <div id="kpisTab" class="tab-content active">
+            <div class="content-header">
+                <h2>Executive Platform Analytics & KPIs</h2>
+            </div>
+
             <div class="grid-4">
                 <div class="stat-card">
-                    <div class="lbl">Total Members</div>
+                    <div class="lbl">Total Registered Users</div>
                     <div class="val" id="kpiTotalUsers">0</div>
                 </div>
                 <div class="stat-card">
@@ -105,7 +254,7 @@
                     <div class="val" id="kpiActiveUsers" style="color:#10b981;">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="lbl">Total Gross Sales</div>
+                    <div class="lbl">Total Package Revenue</div>
                     <div class="val" id="kpiGrossSales">₹0</div>
                 </div>
                 <div class="stat-card">
@@ -116,7 +265,7 @@
 
             <div class="grid-2">
                 <div class="card">
-                    <div class="card-header">Company 10-Matrix Breakdown by Level</div>
+                    <div class="card-header">Company 10-Matrix Capacity by Level</div>
                     <div class="card-body">
                         <table>
                             <thead>
@@ -141,7 +290,7 @@
                             <thead>
                                 <tr>
                                     <th>Commission Type</th>
-                                    <th>Total Distributed</th>
+                                    <th>Total Outflow</th>
                                 </tr>
                             </thead>
                             <tbody id="commissionStatsTable">
@@ -155,16 +304,20 @@
 
         <!-- 2. Profile Section -->
         <div id="profileTab" class="tab-content">
+            <div class="content-header">
+                <h2>Member Profile & Sponsor Context</h2>
+            </div>
+
             <div class="grid-2">
                 <div class="card">
-                    <div class="card-header">Member Account Information</div>
+                    <div class="card-header">Personal Member Account Information</div>
                     <div class="card-body">
                         <p style="margin-bottom:10px;"><strong>Member Code:</strong> <span id="profMemberId" class="badge badge-active">-</span></p>
                         <p style="margin-bottom:10px;"><strong>Full Name:</strong> <span id="profName">-</span></p>
                         <p style="margin-bottom:10px;"><strong>Email:</strong> <span id="profEmail">-</span></p>
                         <p style="margin-bottom:10px;"><strong>Status:</strong> <span id="profStatus">-</span></p>
                         <p style="margin-bottom:10px;"><strong>Direct Sponsor:</strong> <span id="profSponsor">-</span></p>
-                        <div style="margin-top:20px; background:#1f2937; padding:15px; border-radius:6px; border:1px solid var(--border);">
+                        <div style="margin-top:20px; background:#1e293b; padding:15px; border-radius:6px; border:1px solid var(--border);">
                             <label>Your Direct Shareable Referral Link:</label>
                             <input type="text" id="profRefLink" readonly style="margin-top:5px; color:#f59e0b; font-weight:bold;">
                         </div>
@@ -172,7 +325,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">5-Level Matrix Upline Genealogy Chain</div>
+                    <div class="card-header">5-Level Matrix Upline Chain</div>
                     <div class="card-body">
                         <table>
                             <thead>
@@ -194,6 +347,10 @@
 
         <!-- 3. Customer Store Section -->
         <div id="storeTab" class="tab-content">
+            <div class="content-header">
+                <h2>Product Store & Distributor Package Activation</h2>
+            </div>
+
             <div class="grid-2">
                 <div class="card">
                     <div class="card-header">New Distributor Registration</div>
@@ -250,8 +407,12 @@
 
         <!-- 4. Direct Referrals Section -->
         <div id="referralsTab" class="tab-content">
+            <div class="content-header">
+                <h2>Direct Personally Sponsored Members</h2>
+            </div>
+
             <div class="card">
-                <div class="card-header">Direct Personally Sponsored Members</div>
+                <div class="card-header">Sponsored Downline List</div>
                 <div class="card-body">
                     <table>
                         <thead>
@@ -274,8 +435,12 @@
 
         <!-- 5. Genealogy Downline Section -->
         <div id="genealogyTab" class="tab-content">
+            <div class="content-header">
+                <h2>Interactive 10-Matrix Genealogy Hierarchy</h2>
+            </div>
+
             <div class="card">
-                <div class="card-header">10-Matrix Downline Tree Visualization</div>
+                <div class="card-header">Downline Tree Visualizer</div>
                 <div class="card-body">
                     <div id="genealogyContainer">Loading tree hierarchy...</div>
                 </div>
@@ -284,6 +449,10 @@
 
         <!-- 6. Wallet & Ledgers Section -->
         <div id="walletTab" class="tab-content">
+            <div class="content-header">
+                <h2>Wallet Statements & Commission Ledgers</h2>
+            </div>
+
             <div class="stat-card" style="margin-bottom:20px; max-width:400px;">
                 <div class="lbl">Wallet Balance</div>
                 <div class="val" id="walletBalance">₹0.00</div>
@@ -312,14 +481,14 @@
             </div>
         </div>
 
-        <!-- Live Event Output Log -->
-        <div class="card" style="margin-top:20px;">
-            <div class="card-header">Live Server Raw JSON Response</div>
+        <!-- Live Server Response Log -->
+        <div class="card" style="margin-top:30px;">
+            <div class="card-header">Live Server API Payload Stream</div>
             <div class="card-body">
                 <pre id="apiConsole">// System ready.</pre>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
         function logJson(data) {
@@ -328,7 +497,7 @@
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
             refreshAllSections();
